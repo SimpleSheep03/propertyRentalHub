@@ -17,7 +17,7 @@ const PropertyPage = () => {
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
 
   useEffect(() => {
     const fetchPropertyData = async () => {
@@ -68,7 +68,7 @@ const PropertyPage = () => {
                 <PropertyDetails property={property} />
                 <aside className='space-y-4'>
                   <BookmarkButton property={property} />
-                  <ShareButtons property={property} />
+                  <sharebutton property={property} />
                   <PropertyContactForm property={property} />
                 </aside>
               </div>
