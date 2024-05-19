@@ -1,9 +1,7 @@
-import React from 'react'
-import PropertySearchForm from '@/components/PropertySearchForm'
-import Properties from '@/components/Properties'
+import PropertySearchForm from '@/components/PropertySearchForm';
+import Properties from '@/components/Properties';
 
 const PropertiesPage = async () => {
-
   return (
     <>
       <section className='bg-blue-700 py-4'>
@@ -11,11 +9,8 @@ const PropertiesPage = async () => {
           <PropertySearchForm />
         </div>
       </section>
-      {
-        <Properties/>
-      }
+      <Properties />
     </>
   );
-}
-
-export default PropertiesPage
+};
+export default PropertiesPage;

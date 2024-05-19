@@ -20,18 +20,19 @@ export const GET = async (request, { params }) => {
   }
 };
 
+// DELETE /api/properties/:id
 export const DELETE = async (request, { params }) => {
   try {
+    const propertyId = params.id;
 
-    const propertyId = params.id
+    const sessionUser = await getSessionUser();
 
-    const sessionUser = await getSessionUser()
-
-    if(!sessionUser || !sessionUser.userId){
-      return new Response('User Id is required',  { status : 401 })
+    // Check for session
+    if (!sessionUser || !sessionUser.userId) {
+      return new Response('User ID is required', { status: 401 });
     }
 
-    const { userId } = sessionUser
+    const { userId } = sessionUser;
 
     await connectDB();
 
@@ -39,13 +40,14 @@ export const DELETE = async (request, { params }) => {
 
     if (!property) return new Response('Property Not Found', { status: 404 });
 
-    if(property.owner.toString() != userId){
-      return new Response('Unauthorized' , { status : 401 })
+    // Verify ownership
+    if (property.owner.toString() !== userId) {
+      return new Response('Unauthorized', { status: 401 });
     }
 
-    await property.deleteOne()
+    await property.deleteOne();
 
-    return new Response(JSON.stringify('Property deleted'), {
+    return new Response('Property Deleted', {
       status: 200,
     });
   } catch (error) {
@@ -54,7 +56,8 @@ export const DELETE = async (request, { params }) => {
   }
 };
 
-export const PUT = async (request , { params }) => {
+// PUT /api/properties/:id
+export const PUT = async (request, { params }) => {
   try {
     await connectDB();
 
@@ -64,22 +67,24 @@ export const PUT = async (request , { params }) => {
       return new Response('User ID is required', { status: 401 });
     }
 
-    const { id } = params
+    const { id } = params;
     const { userId } = sessionUser;
 
     const formData = await request.formData();
 
-    // Access all values from amenities and images
+    // Access all values from amenities
     const amenities = formData.getAll('amenities');
 
-    //get property to update
-    const existingProperty = await Property.findById(id)
-    if(!existingProperty){
-      return new Response('Property does not exist' , { status : 404 })
+    // Get property to update
+    const existingProperty = await Property.findById(id);
+
+    if (!existingProperty) {
+      return new Response('Property does not exist', { status: 404 });
     }
 
-    if(existingProperty.owner.toString() != userId){
-      return new Response('Unauthorized' , { status : 401 })
+    // Verify ownership
+    if (existingProperty.owner.toString() !== userId) {
+      return new Response('Unauthorized', { status: 401 });
     }
 
     // Create propertyData object for database
@@ -110,13 +115,14 @@ export const PUT = async (request , { params }) => {
       owner: userId,
     };
 
-    //update property in database
-    const updatedProperty = await Property.findByIdAndUpdate(id , propertyData)
+    // Update property in database
+    const updatedProperty = await Property.findByIdAndUpdate(id, propertyData);
 
     return new Response(JSON.stringify(updatedProperty), {
       status: 200,
     });
   } catch (error) {
+    console.log(error);
     return new Response('Failed to add property', { status: 500 });
   }
 };

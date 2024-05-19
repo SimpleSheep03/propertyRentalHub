@@ -8,7 +8,7 @@ import PropertyDetails from '@/components/PropertyDetails';
 import PropertyImages from '@/components/PropertyImages';
 import BookmarkButton from '@/components/BookmarkButton';
 import PropertyContactForm from '@/components/PropertyContactForm';
-import ShareButton from '@/components/ShareButton';
+import ShareButtons from '@/components/ShareButtons';
 import Spinner from '@/components/Spinner';
 import { FaArrowLeft } from 'react-icons/fa';
 
@@ -17,7 +17,6 @@ const PropertyPage = () => {
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     const fetchPropertyData = async () => {
@@ -68,7 +67,7 @@ const PropertyPage = () => {
                 <PropertyDetails property={property} />
                 <aside className='space-y-4'>
                   <BookmarkButton property={property} />
-                  <sharebutton property={property} />
+                  <ShareButtons property={property} />
                   <PropertyContactForm property={property} />
                 </aside>
               </div>
