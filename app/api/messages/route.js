@@ -4,6 +4,36 @@ import { getSessionUser } from "@/utils/getSessionUser";
 
 export const dynamic = 'force-dynamic'
 
+export const GET = async () => {
+  try{
+    await connectDB()
+
+    const sessionUser = await getSessionUser();
+  
+      if (!sessionUser || !sessionUser.user) {
+        return new Response(
+          JSON.stringify({ message: 'User Id is required' }),
+          { status: 401 }
+        );
+      }
+  
+      const { userId } = sessionUser;
+
+      const readMessages = await Message.find({ recipient : userId , read : true }).populate('sender' , 'username').populate('property' , 'name').sort({ createdAt : -1 })
+
+      const unreadMessages = await Message.find({ recipient : userId , read : false }).populate('sender' , 'username').populate('property' , 'name').sort({ createdAt : -1 })
+
+      const messages = [...unreadMessages , ...readMessages]
+
+      return new Response(JSON.stringify(messages) , { status : 200 })
+  }
+  catch(error){
+    console.log(error)
+    return new Response('Something went wrong' ,  { status : 200 })
+
+  }
+}
+
 export const POST = async (request) => {
     try {
       await connectDB();
