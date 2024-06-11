@@ -19,7 +19,7 @@ async function fetchProperties({ showFeatured = false } = {}) {
     return await res.json();
   } catch (error) {
     console.log(error);
-    return [];
+    return []
   }
 }
 
